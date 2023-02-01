@@ -22,31 +22,38 @@ public class ProcessCampaignClient {
                 .build();
 
         HttpResponse<String> httpResponse = campaignClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-//        System.out.println(httpResponse.body());
-        parseJson(httpResponse.body());
+
+        Map<String, String> mapCampaign = parseJsonResponse(httpResponse.body());
+        setObjectPropertyValue(mapCampaign);
+
         return httpResponse.body();
+    }
+
+    private void setObjectPropertyValue(Map<String, String> campaign) {
+        new ResponseMapping(campaign.get("contactOperator"), campaign.get("contactNumber"));
     }
 
     private String createAJsonString(ProcessCampaignEntity campaignEntity) {
         return "{" + "\"campaignLotId\":\"" + campaignEntity.campaignLotId() + "\"," + "\"referenceId\":\"" + campaignEntity.transactionId() + "\"," + "\"contactNumber\":\"" + campaignEntity.contactNumber() + "\"," + "\"balance\":\"" + campaignEntity.balance() + "\"," + "\"contactType\":\"" + campaignEntity.contactType() + "\"," + "\"contactOperator\":\"" + campaignEntity.contactOperator() + "\"" + "}";
     }
 
-    private void parseJson(String value) {
-        Map<String, Object> map = new HashMap<>();
-        String[] pairs = value.replace("{", "").replace("}", "").split(",");
+    private Map<String, String> parseJsonResponse(String responseData) {
 
-        Arrays.stream(pairs)
-                .map(pair -> pair.split(":"))
-                .forEach(keyValue -> map.put(keyValue[0], keyValue[1]));
+        Map<String, String> records = new HashMap<>();
+        String[] splitResponseData = responseData.replace("{\"", "").replace("\"}", "").split(",");
 
-        /* Split the array and put the value in map using foreach
-            for (String pair: pairs){
-                String keyValue[] = pair.split(":");
-                map.put(keyValue[0], keyValue[1]);
-            }
-         */
+        Arrays.stream(splitResponseData)
+                .map(eachResponse -> eachResponse.split(":"))
+                .forEach(keyValue -> {
 
-            System.out.println(map);
+                    String key = keyValue[0].trim().replace("\"", "");
+                    String value = keyValue[1].trim().replace("\"", "");
+
+                    records.put(key, value);
+                });
+
+        System.out.println(records);
+        return records;
     }
 
 }
