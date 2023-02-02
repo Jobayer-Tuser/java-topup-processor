@@ -22,15 +22,15 @@ public class ProcessCampaignClient {
                 .build();
 
         HttpResponse<String> httpResponse = campaignClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
         Map<String, String> mapCampaign = parseJsonResponse(httpResponse.body());
-        setObjectPropertyValue(mapCampaign);
+        mapResponseWithResponseMapping(mapCampaign);
 
         return httpResponse.body();
     }
 
-    private void setObjectPropertyValue(Map<String, String> campaign) {
-        new ResponseMapping(campaign.get("contactOperator"), campaign.get("contactNumber"));
+    private void mapResponseWithResponseMapping(Map<String, String> campaigns) {
+        System.out.println(campaigns);
+        new ResponseMapping(campaigns.get("contactOperator"), campaigns.get("contactNumber"));
     }
 
     private String createAJsonString(ProcessCampaignEntity campaignEntity) {

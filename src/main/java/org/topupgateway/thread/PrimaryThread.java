@@ -36,7 +36,7 @@ public class PrimaryThread implements Runnable{
                 }
                 subexecutor.shutdown();
             } else {
-                System.out.println("");
+                System.out.println("No value");
             }
 
         } catch (SQLException | InterruptedException e) {

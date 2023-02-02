@@ -11,10 +11,6 @@ public class DBConnect {
     protected ResourceBundle prop = ResourceBundle.getBundle("config");
     protected Connection connection;
     public DBConnect() throws SQLException {
-        connection = DriverManager.getConnection(
-            prop.getString("dbUrl"),
-            prop.getString("dbUser"),
-            prop.getString("dbPass")
-        );
+        connection = DriverManager.getConnection(prop.getString("dbUrl"), prop.getString("dbUser"), prop.getString("dbPass"));
     }
 }

@@ -27,7 +27,6 @@ public class TopUpGateway {
                 Runnable primaryThread = new PrimaryThread(numberOfSecondaryThread, i);
                 executorService.execute(primaryThread);
             }
-            Thread.sleep(1000);
             executorService.shutdown();
         }
     }

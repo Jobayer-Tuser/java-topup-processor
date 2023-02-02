@@ -14,6 +14,7 @@ public class ProcessCampaign extends DBConnect{
 
         PreparedStatement queryStatement = connection.prepareStatement(SQLToGetContacts(numberOfSecondaryThread, numberOfPrimaryThread));
         ResultSet campaignRecord = queryStatement.executeQuery();
+
         List<ProcessCampaignEntity> contacts = new ArrayList<>();
 
         while (campaignRecord.next()){
@@ -33,15 +34,17 @@ public class ProcessCampaign extends DBConnect{
                 );
             contacts.add(campaignEntity);
         }
-
         return contacts;
     }
 
     private String SQLToGetContacts(int numberOfSecondaryThread, int numberOfPrimaryThread){
-        return  "SELECT id, campaign_lot_id, contact_number, contact_operator, service_type, contact_type, balance, process_status , transaction_id, created_at, updated_at " +
+        String Sql=  "SELECT id, campaign_lot_id, contact_number, contact_operator, service_type, contact_type, balance, process_status , transaction_id, created_at, updated_at " +
                 "FROM campaign_processor WHERE id % " + numberOfSecondaryThread + " = " + numberOfPrimaryThread +
                 " AND process_status = 'Pending' " +
                 "LIMIT " + prop.getString("noOfSubThread");
+
+        return "SELECT id, campaign_lot_id, contact_number, contact_operator, service_type, contact_type, balance, process_status , transaction_id, created_at, updated_at " +
+                "FROM campaign_processor WHERE process_status = 'Pending' " + "LIMIT " + prop.getString("noOfSubThread");
     }
 
 
